@@ -1,0 +1,55 @@
+---
+- name: routing_protocol_setup
+  hosts: routers
+  gather_facts: no
+
+  tasks:
+    - name: Configure OSPF on R1
+      ios_config:
+        src: ./templates/OSPF_config.j2
+      vars:
+        process_id: "1"
+        router_id: "1.1.1.1"
+        networks:
+          - { network: "10.11.1.0", mask: "0.0.0.3", area: "0" }
+          - { network: "10.11.2.0", mask: "0.0.0.3", area: "0" }
+          - { network: "192.168.10.0", mask: "0.0.0.255", area: "0" }
+          - { network: "192.168.20.0", mask: "0.0.0.255", area: "0" }
+      when: inventory_hostname == 'R1'
+      become: yes
+      become_method: enable
+
+    - name: Configure OSPF on R2
+      ios_config:
+        src: ./templates/OSPF_config.j2
+      vars:
+        process_id: "1"
+        router_id: "2.2.2.2"
+        networks:
+          - { network: "10.11.1.0", mask: "0.0.0.3", area: "0" }
+          - { network: "192.168.10.0", mask: "0.0.0.255", area: "0" }
+      when: inventory_hostname == 'R2'
+      become: yes
+      become_method: enable
+
+    - name: Configure OSPF on R3
+      ios_config:
+        src: ./templates/OSPF_config.j2
+      vars:
+        process_id: "1"
+        router_id: "3.3.3.3"
+        networks:
+          - { network: "10.11.2.0", mask: "0.0.0.3", area: "0" }
+          - { network: "192.168.20.0", mask: "0.0.0.255", area: "0" }
+      when: inventory_hostname == 'R3'
+      become: yes
+      become_method: enable
+
+    - name: Writing to memory
+      ios_config:
+        lines:
+          - do write memory
+      become: yes
+      become_method: enable
+
+
