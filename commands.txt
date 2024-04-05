@@ -1,1 +1,1 @@
-ansible-playbook -i inventory.ini basic_network_setup.yaml 
+ansible-playbook -i inventory.ini basic_network_setup.yml 
