@@ -1,0 +1,113 @@
+---
+- name: Change hostname
+  ios_config:
+    src: ../templates/hostname.j2
+  become: yes
+  become_method: enable
+
+- name: Set local password
+  ios_config:
+    src: ../templates/Password_local.j2
+  vars:
+    enable_password: "{{ ansible_become_pass }}"
+    username: "{{ ansible_user }}"
+    user_password: "{{ ansible_ssh_pass }}"
+  become: yes
+  become_method: enable
+
+- name: Configure SSH and disable Telnet
+  ios_config:
+    src: ../templates/SSH_telnet_config.j2
+  become: yes
+  become_method: enable
+
+- name: Limit console and VTY access
+  ios_config:
+    src: ../templates/VTY_access.j2
+  become: yes
+  become_method: enable
+
+- name: Configure logging and timestamps
+  ios_config:
+    src: ../templates/Logging_timestamps.j2
+  become: yes
+  become_method: enable
+      
+- name: Configure R1
+  ios_config:
+    src: ../templates/interface_config.j2
+  loop:
+    - interface_id: "1/0"
+      interface_ip: "10.11.1.1"
+      interface_mask: "255.255.255.252"
+    - interface_id: "2/0"
+      interface_ip: "10.11.2.1"
+      interface_mask: "255.255.255.252"
+  loop_control:
+    loop_var: interface
+  when: inventory_hostname == 'R1'
+  become: yes
+  become_method: enable
+
+- name: Configure VLAN on R1
+  ios_config:
+    src: ../templates/VLANs_config.j2
+  vars:
+    interface_id: "0/0"
+    vlan_id: "10"
+    vlan_ip: "192.168.1.1"
+    vlan_mask: "255.255.255.0"
+  when: inventory_hostname == 'R1'
+  become: yes
+  become_method: enable
+
+- name: Configure R2
+  ios_config:
+    src: ../templates/interface_config.j2
+  loop:
+    - interface_id: "1/0"
+      interface_ip: "10.11.1.2"
+      interface_mask: "255.255.255.252"
+  loop_control:
+    loop_var: interface
+  when: inventory_hostname == 'R2'
+  become: yes
+  become_method: enable
+
+- name: Configure VLAN on R2
+  ios_config:
+    src: ../templates/VLANs_config.j2
+  vars:
+    interface_id: "0/0"
+    vlan_id: "20"
+    vlan_ip: "192.168.2.1"
+    vlan_mask: "255.255.255.0"
+  when: inventory_hostname == 'R2'
+  become: yes
+  become_method: enable
+
+- name: Configure R3
+  ios_config:
+    src: ../templates/interface_config.j2
+  loop:
+    - interface_id: "1/0"
+      interface_ip: "10.11.2.2"
+      interface_mask: "255.255.255.252"
+  loop_control:
+    loop_var: interface
+  when: inventory_hostname == 'R3'
+  become: yes
+  become_method: enable
+
+- name: Configure VLAN on R3
+  ios_config:
+    src: ../templates/VLANs_config.j2
+  vars:
+    interface_id: "0/0"
+    vlan_id: "30"
+    vlan_ip: "192.168.3.1"
+    vlan_mask: "255.255.255.0"
+  when: inventory_hostname == 'R3'
+  become: yes
+  become_method: enable
+

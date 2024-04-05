@@ -1,0 +1,8 @@
+---
+- hosts: routers
+  gather_facts: no
+  vars_files:
+    - secrets.yml
+  roles:
+    - network_config
+

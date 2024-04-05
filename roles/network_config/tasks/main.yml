@@ -1,0 +1,7 @@
+---
+- name: Apply common configuration to all routers
+  import_tasks: basic_network_setup.yml
+
+- name: Apply OSPF configuration to all routers
+  import_tasks: routing_protocol_setup.yml
+

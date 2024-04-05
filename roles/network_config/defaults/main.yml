@@ -1,0 +1,6 @@
+---
+# defaults file for network_config
+ansible_become_pass: "{{ secrets_user_password }}"
+ansible_user: "shawki"
+ansible_ssh_pass: "{{ secrets_enable_password }}"
+
