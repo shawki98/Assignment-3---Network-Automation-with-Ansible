@@ -1,0 +1,27 @@
+# vars file for network_config
+routers:
+  - name: R1
+    ansible_host: 192.168.122.2
+    ansible_connection: network_cli
+    ansible_network_os: ios
+    interfaces: 
+      - { interface_id: "1/0", interface_ip: "10.11.1.1", interface_mask: "255.255.255.252" }
+      - { interface_id: "2/0", interface_ip: "10.11.2.1", interface_mask: "255.255.255.252" }
+    vlan_interfaces:
+      - { interface_id: "0/0", vlan_id: "10", vlan_ip: "192.168.1.1", vlan_mask: "255.255.255.0" }
+  - name: R2
+    ansible_host: 192.168.122.3
+    ansible_connection: network_cli
+    ansible_network_os: ios
+    interfaces: 
+      - { interface_id: "1/0", interface_ip: "10.11.1.2", interface_mask: "255.255.255.252" }
+    vlan_interfaces:
+      - { interface_id: "0/0", vlan_id: "20", vlan_ip: "192.168.2.1", vlan_mask: "255.255.255.0" }
+  - name: R3
+    ansible_host: 192.168.122.4
+    ansible_connection: network_cli
+    ansible_network_os: ios
+    interfaces: 
+      - { interface_id: "1/0", interface_ip: "10.11.2.2", interface_mask: "255.255.255.252" }
+    vlan_interfaces:
+      - { interface_id: "0/0", vlan_id: "30", vlan_ip: "192.168.3.1", vlan_mask: "255.255.255.0" }
