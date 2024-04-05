@@ -1,0 +1,6 @@
+---
+# defaults file for network_config
+ansible_become_pass: "telecomS144"
+ansible_user: "shawki"
+ansible_ssh_pass: "telecomS144"
+
