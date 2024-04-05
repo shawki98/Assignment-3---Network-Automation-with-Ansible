@@ -1,0 +1,33 @@
+name: Ansible Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Ansible
+        run: pip install ansible
+
+      - name: Decrypt Ansible Vault
+        run: ansible-vault decrypt inventory/hosts.yml --vault-password-file .vault_password.txt
+        env:
+          VAULT_PASS: ${{ secrets.VAULT_PASS }}
+
+      - name: Run Ansible Playbooks
+        run: ansible-playbook -i inventory/hosts.yml playbooks/*.yml
+        env:
+          VAULT_PASS: ${{ secrets.VAULT_PASS }}
+
